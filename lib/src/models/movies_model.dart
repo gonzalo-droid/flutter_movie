@@ -66,7 +66,14 @@ class Movie {
       voteAverage = json['vote_average'] / 1;
       voteCount = json['vote_count'] ;
 
+  }
 
+  getPosterImg(){
+
+    if(posterPath == null){
+      return 'https://f.rpp-noticias.io/2020/10/11/1008320marvel-1jpg.jpg';
+    }
+    return 'https://image.tmdb.org/t/p/w500/$posterPath';
   }
 
 }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/src/provides/movie_provider.dart';
 import 'package:flutter_movie/src/widgets/card_swiper_widget.dart';
-
-
-
+import 'package:flutter_movie/src/widgets/movie_horizontal.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+  final moviesProvider = new MovieProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +28,75 @@ class HomePage extends StatelessWidget {
 
       body: Container(
         child: Column(
-          children: [_swiperCards()],
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _swiperCards(),
+            _footer(context)
+          ],
         ),
       ),
     );
   }
 
   Widget _swiperCards() {
+    // moviesProvider.getMovies();
+    // return CardSwiper(movies: [1, 2, 3, 4, 5]);F
 
-    final moviesProvider = new MovieProvider();
-    moviesProvider.getMovies();
+    return FutureBuilder(
+      future: moviesProvider.getMovies(),
+      // initialData: InitialData,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        
+        
+        if (snapshot.hasData) {
+          return CardSwiper(
+            movies: snapshot.data,
+          );
+        } else {
+          //cuando no hay infomracion, o esta a la espera del future
+          return Container(
+            height: 400.0,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
 
-    return CardSwiper(movies: [1,2,3,4,5]);
+  Widget _footer(BuildContext context) {
+
+    return Container(
+      width: double.infinity,
+      
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left:15.0),
+            margin: EdgeInsets.only(top:20.0),
+            child: Text(
+              'Populars',
+              style: Theme.of(context).textTheme.subtitle2,
+              
+               //tema de la aplicacaion
+            ),
+          ),
+          SizedBox(height: 5.0),
+          FutureBuilder(
+            future: moviesProvider.getPopulars(),
+            // initialData: InitialData,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              // snapshot.data?.forEach((element)=>print(element.title));
+
+              if(snapshot.hasData){
+                return MovieHorizontal(movies: snapshot.data,);
+              }else{
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
