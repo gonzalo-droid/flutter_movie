@@ -40,6 +40,8 @@ class CardSwiper extends StatelessWidget {
 
         // pagination: new SwiperPagination(),
         // control: new SwiperControl(),
+        // asddsadasdadasdasdadasd
+        // 
       ),
     );
   }

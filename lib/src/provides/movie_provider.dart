@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_movie/src/models/movies_model.dart';
@@ -10,10 +11,35 @@ class MovieProvider {
   String _url = 'api.themoviedb.org';
   String _language = 'es-ES';
 
+  int _popularsPage = 0;
+  bool _loading = false;
+
+
+
+  List<Movie> _populars = new List();
+
+  //Steam
+  final _popularsStreamController = StreamController<List<Movie>>.broadcast();
+  //broadcast muchos lugares escuchando este stream
+
+  // Add dato al stream
+  Function(List<Movie>) get popularsSink => _popularsStreamController.sink.add;
+
+  //escucha datos que emite el stream
+  Stream<List<Movie>> get popularsStream => _popularsStreamController.stream;
+
+  //get -> static
+
+   void disposeStreams(){
+    // ? valida si hay un stream abierto
+    _popularsStreamController?.close();
+  }
+
+
   Future<List<Movie>> _processResponse(Uri url) async {
-    final response = await http.get(url);
+    final resp = await http.get(url);
     //decode al json
-    final decodeData = json.decode(response.body);
+    final decodeData = json.decode(resp.body);
     // print(decodeData);
     final movies = new Movies.fromJsonList(decodeData['results']);
 
@@ -30,10 +56,28 @@ class MovieProvider {
   }
 
   Future<List<Movie>> getPopulars() async {
+
+    if(_loading) return [];
+
+    _loading= true;
+    _popularsPage++;
+
+    print('loading next data');
+
     final url = Uri.https(_url, '3/movie/popular', {
       'api_key': _apiKey,
       'language': _language,
+      'page': _popularsPage.toString(),
     });
-    return _processResponse(url);
+    final resp= await  _processResponse(url);
+
+    //add all lista de peliculas
+    _populars.addAll(resp);
+
+    popularsSink(_populars);
+
+    _loading= false;
+
+    return resp;
   }
 }
