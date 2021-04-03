@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_movie/src/models/actors_model.dart';
 import 'package:flutter_movie/src/models/movies_model.dart';
 
 //https://pub.dev/packages/http/install
@@ -13,8 +14,6 @@ class MovieProvider {
 
   int _popularsPage = 0;
   bool _loading = false;
-
-
 
   List<Movie> _populars = new List();
 
@@ -79,5 +78,21 @@ class MovieProvider {
     _loading= false;
 
     return resp;
+  }
+
+   // Consumir Casting of  movie
+   // 
+  
+  Future<List<Actor>> getCast(String movieId) async{
+    final url = Uri.https(_url, '3/movie/$movieId/credits',{
+      'api_key' : _apiKey,
+      'laguage' : _language,
+    });
+
+    final resp = await http.get(url); //esperar la respuesta
+    final decodedData = json.decode(resp.body);
+    final cast = new Cast.fromJsonList(decodedData['cast']);
+    return cast.actors;
+
   }
 }

@@ -16,6 +16,12 @@ class Movies{
 }
 
 class Movie {
+
+  // id unica para usar hero
+  String uniqueId;
+
+
+
   bool adult;
   String backdropPath;
   List<int> genreIds;
@@ -71,9 +77,18 @@ class Movie {
   getPosterImg(){
 
     if(posterPath == null){
-      return 'https://f.rpp-noticias.io/2020/10/11/1008320marvel-1jpg.jpg';
+      return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9hGlyysBiE-h2e6dQLPVf95r8cqePaOdicw&usqp=CAU';
     }
     return 'https://image.tmdb.org/t/p/w500/$posterPath';
+  }
+
+
+   getBackgroundImg(){
+
+    if(backdropPath == null){
+      return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9hGlyysBiE-h2e6dQLPVf95r8cqePaOdicw&usqp=CAU';
+    }
+    return 'https://image.tmdb.org/t/p/w500/$backdropPath';
   }
 
 }

@@ -37,23 +37,31 @@ class MovieHorizontal extends StatelessWidget {
         controller: _pageController,
         // children: _cards(context),//es aceptado en PageVie()
         itemCount: movies.length, // tamaño dinamico segun la cantidad de datos
-        itemBuilder: (BuildContext context, int index) => _createdCard(context, movies[index]),
+        itemBuilder: (BuildContext context, int index) =>
+            _createdCard(context, movies[index]),
       ),
     );
   }
 
   Widget _createdCard(BuildContext context, Movie movie) {
-    final card = Container(
+
+    movie.uniqueId = '${ movie.id }-horizontal';
+
+    final card = 
+    Container(
       // margin: EdgeInsets.only(right: 15.0),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: FadeInImage(
-              height: 160.0,
-              image: NetworkImage(movie.getPosterImg()),
-              placeholder: AssetImage('assets/img/no-image.jpg'),
-              fit: BoxFit.cover,
+          Hero(
+            tag: movie.uniqueId,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: FadeInImage(
+                height: 160.0,
+                image: NetworkImage(movie.getPosterImg()),
+                placeholder: AssetImage('assets/img/no-image.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           SizedBox(
@@ -66,9 +74,8 @@ class MovieHorizontal extends StatelessWidget {
       ),
     );
 
-
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         // print(movie.title);
         Navigator.pushNamed(context, 'detail', arguments: movie);
       },
@@ -76,10 +83,9 @@ class MovieHorizontal extends StatelessWidget {
     );
   }
 
-
   // List<Widget> _cards(BuildContext context) {
   //   return movies.map((movie) {
-      
+
   //   }).toList();
   // }
 }
