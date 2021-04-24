@@ -9,7 +9,7 @@ class MovieDetail extends StatelessWidget {
     //recibo argumentos del movie horizonal
     final Movie movie = ModalRoute.of(context).settings.arguments;
 
-    print(movie.title);
+    // print(movie.title);
     return Scaffold(
         body: CustomScrollView(
       slivers: <Widget>[
@@ -38,6 +38,7 @@ class MovieDetail extends StatelessWidget {
       pinned: true, //visible en el scroll
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
+        titlePadding: EdgeInsets.symmetric(horizontal: 15.0),
         title: Text(
           movie.title,
           style: TextStyle(color: Colors.white, fontSize: 16.0),
